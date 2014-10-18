@@ -1,0 +1,8 @@
+test:
+    command: ls
+    dependencies: [ test-dependency ]
+    email: nagy.samu222@gmail.com
+test-dependency:
+    command: dir
+    dependencies: []
+    email: nagy.samu222@gmail.com
