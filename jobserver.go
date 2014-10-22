@@ -16,12 +16,10 @@ func main() {
 	// mailer
 	m_object := new( mailer.Process )
 	m_channel := m_object.Init( db_object )
-	go m_object.Run()
 
 	// worker
 	w_object := new( worker.Process )
 	w_channel := w_object.Init( db_object, m_channel )
-	go w_object.Run()
 
 	// api
 	a_object := new( api.Process )

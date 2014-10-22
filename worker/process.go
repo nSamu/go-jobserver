@@ -12,16 +12,23 @@ type Process struct {
 	db *database.Object
 }
 
-type Message struct {
-	Id, Callback string
-}
-
 func (t *Process) Init( db *database.Object, mch chan mailer.Message ) ( ch chan Message ) {
 	t.ch = make( chan Message )
 	t.mch = mch
 	t.db = db
 
+	go t.Run()
+
 	return t.ch
 }
 
-func (t *Process) Run() {}
+func (t *Process) Run() {
+
+	for message := range t.ch {
+		go t.execute( message )
+	}
+}
+
+func (t *Process) execute( data Message ) {
+
+}
