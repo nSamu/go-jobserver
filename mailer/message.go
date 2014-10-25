@@ -1,5 +1,5 @@
 package mailer
 
 type Message struct {
-	Body, Recipient string
+	Recipient, Subject, Body string
 }

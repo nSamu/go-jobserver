@@ -7,12 +7,12 @@ import (
 
 type Process struct {
 	ch chan Message
-	mch chan mailer.Message
+	mch chan<- mailer.Message
 
 	db *database.Object
 }
 
-func (t *Process) Init( db *database.Object, mch chan mailer.Message ) ( ch chan Message ) {
+func (t *Process) Init( db *database.Object, mch chan<- mailer.Message ) chan Message {
 	t.ch = make( chan Message )
 	t.mch = mch
 	t.db = db
