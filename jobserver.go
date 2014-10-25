@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"jobserver/mailer"
 	"jobserver/database"
 	"jobserver/worker"
@@ -24,7 +23,5 @@ func main() {
 	// api
 	a_object := new( api.Process )
 	a_object.Init( db_object, w_channel )
-
-	http.HandleFunc("/", a_object.Run )
-	http.ListenAndServe(":8080", nil)
+	a_object.Run()
 }
