@@ -14,14 +14,14 @@ import (
 type handler map[string]func( []string, map[string][]string, map[string][]string ) response
 
 type Process struct {
-	wch chan worker.Message
+	wch chan<- worker.Message
 	db *database.Object
 
 	handlers handler
 }
 
 // Egyszerű API kezelő inicailizálása
-func (t *Process) Init( db *database.Object, wch chan worker.Message ) {
+func (t *Process) Init( db *database.Object, wch chan<- worker.Message ) {
 	t.db = db
 	t.wch = wch
 
@@ -73,8 +73,21 @@ func (t *Process) serve(writer http.ResponseWriter, request *http.Request) {
 }
 
 // Visszaad egy listát az elérhető jobokról. Minden jobról elég csak minimális információt adni (name, olvasható név, leírás).
+type ListItem struct { Name, Title, Description string }
 func (t *Process) requestList( data []string, get map[string][]string, post map[string][]string ) response {
-	return response{ data, nil, http.StatusOK }
+
+	// job lista lekérdezése
+	list, i := t.db.Worker.GetList(), 0
+
+	// lekért job lista adatainak átmásolása a kívánt formátumban
+	var result []ListItem
+	result = make( []ListItem, len(list) )
+	for name, job := range list {
+		result[i] = ListItem{ name, job.Title, job.Description }
+		i++
+	}
+
+	return response{ result, nil, http.StatusOK }
 }
 // Visszaad minden információt a jobról, és egy rövid összegzést (futás száma, ideje, eredménye) a legutóbbi 20 futásról időrend szerint fordítva rendezve (legújabb elől).
 func (t *Process) requestData( data []string, get map[string][]string, post map[string][]string ) response {
@@ -89,7 +102,7 @@ func (t *Process) requestLog( data []string, get map[string][]string, post map[s
 func (t *Process) requestRun( data []string, get map[string][]string, post map[string][]string ) response {
 
 	// futtatandó job gyorsellenőrzése
-	if !t.db.Worker.Exist( data[0] ) {
+	if _, exist := t.db.Worker.Get( data[0] ); !exist {
 		return response{ nil, errors.New("Job Not Found"), http.StatusNotFound }
 	}
 

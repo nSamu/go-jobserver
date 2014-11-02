@@ -26,7 +26,7 @@ func (t *Process) Init(db *database.Object) chan<- Message {
 
 	// konfigurációs fájl beolvasás
 	if error := t.db.Load("mailer.yaml"); error != nil {
-		panic("Mailer: can load the mailer configuration: " + error.Error())
+		panic("Mailer: can't load the configuration: " + error.Error())
 	}
 
 	// TODO adatbázisból kiküldetlen levelek kiküldésre küldése (ezt így valahogy optimálni kell majd, mert ha csak forral bedobáljuk a channelbe, akkor lehet kicsit telítődik egy ideig

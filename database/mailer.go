@@ -23,5 +23,3 @@ func (t *Mailer) Load( file string ) error {
 
 	return error
 }
-func (t *Mailer) Backup() {}
-func (t *Mailer) Restore() {}
