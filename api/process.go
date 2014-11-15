@@ -122,7 +122,7 @@ func (t *Process) requestData( data []string, get map[string][]string, post map[
 		return response{ nil, errors.New("Job Not Found"), http.StatusNotFound }
 	} else {
 
-		tmp := t.db.GetRunList( data[0], 0, 20 )
+		tmp := t.db.GetLogList( data[0], 20 )
 		logs := make( []logItemShort, 0, len( tmp ) )
 		log.Println( logs )
 		for _, l := range tmp {
@@ -160,7 +160,7 @@ func (t *Process) requestLog( data []string, get map[string][]string, post map[s
 	} else {
 
 		index, _ := strconv.Atoi( data[1] )
-		if tmp := t.db.GetRun( data[0], index ); tmp == nil {
+		if tmp := t.db.GetLog( data[0], index ); tmp == nil {
 			return response{ nil, errors.New("Run Not Found"), http.StatusNotFound }
 		} else {
 
