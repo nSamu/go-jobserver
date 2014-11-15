@@ -9,18 +9,14 @@ type Process struct {
 	ch chan Message
 	mch chan<- mailer.Message
 
-	db *database.Worker
+	data *database.Worker
 }
 
 func (t *Process) Init( db *database.Object, mch chan<- mailer.Message ) chan<- Message {
 	t.ch = make( chan Message )
 	t.mch = mch
-	t.db = db.Worker
-
-	// konfigurációs fájl beolvasás
-	if error := t.db.Load("worker.yaml"); error != nil {
-		panic("Worker: can't load the configuration: " + error.Error())
-	}
+	t.data = db.Worker
+	t.data.Init()
 
 	go t.Run()
 
